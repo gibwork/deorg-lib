@@ -32,6 +32,7 @@ import { voteTaskProposalInstruction } from './instructions/vote-task-proposal-i
 import { createProjectProposalInstruction } from './instructions/create-project-proposal-instruction';
 import { voteProjectProposalInstruction } from './instructions/vote-project-proposal-instruction';
 import { completeTaskInstruction } from './instructions/complete-task-instruction';
+import { enableTaskVaultWithdrawalInstruction } from './instructions/enable-task-withdraw-instruction';
 
 export class Deorg {
   connection: Connection;
@@ -262,6 +263,42 @@ export class Deorg {
       organization.tokenMint,
       new PublicKey(task.assignee),
       new PublicKey(project.accountAddress),
+    );
+
+    const transaction = new Transaction();
+    transaction.add(instruction);
+    transaction.feePayer = new PublicKey(task.assignee);
+    transaction.recentBlockhash = (
+      await this.connection.getLatestBlockhash()
+    ).blockhash;
+
+    return {
+      transaction,
+    };
+  }
+
+  async enableTaskVaultWithdrawalTransaction(taskAddress: string) {
+    const task = await this.getTaskDetails(taskAddress);
+
+    if (!task.vault) {
+      throw new Error('Task vault not found');
+    }
+
+    const project = await this.getProjectDetails(task.project);
+
+    const organization = await this.getOrganizationDetails(
+      project.organization,
+    );
+
+    const { instruction } = await enableTaskVaultWithdrawalInstruction(
+      taskAddress,
+      task.assignee,
+      this.connection,
+      this.PROGRAM_ID,
+      organization.tokenMint,
+      new PublicKey(task.assignee),
+      new PublicKey(project.accountAddress),
+      new PublicKey(task.vault),
     );
 
     const transaction = new Transaction();
