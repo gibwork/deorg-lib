@@ -13,6 +13,9 @@ import {
   initOrganizationTreasuryInstruction,
   registerOrganizationTreasuryInstruction,
 } from './instructions';
+import { convertUuid } from './helpers/convertUuid';
+import { DeorgVotingProgram } from './deorg_voting_program';
+import * as anchor from '@coral-xyz/anchor';
 
 export class Deorg {
   connection: Connection;
@@ -33,9 +36,11 @@ export class Deorg {
       );
 
     const { instruction: initTreasuryTokenInstruction } =
-      await this.initOrganizationTreasury(
+      await initOrganizationTreasuryInstruction(
         organizationPDA.toString(),
         dto.creatorWallet,
+        this.PROGRAM_ID,
+        this.connection,
       );
 
     const treasuryTokenKeypair = new Keypair();
@@ -78,17 +83,115 @@ export class Deorg {
     return tx;
   }
 
-  async initOrganizationTreasury(
-    organizationAddress: string,
-    authority: string,
-  ) {
-    const data = await initOrganizationTreasuryInstruction(
-      organizationAddress,
-      authority,
-      this.PROGRAM_ID,
-      this.connection,
+  async getOrganizationDetails(organizationAccount: string) {
+    // Create a dummy wallet provider for read-only operations
+    const dummyWallet = {
+      publicKey: PublicKey.default,
+      signTransaction: async (tx: any) => tx,
+      signAllTransactions: async (txs: any[]) => txs,
+    } as anchor.Wallet;
+
+    const provider = new anchor.AnchorProvider(this.connection, dummyWallet, {
+      commitment: 'confirmed',
+      preflightCommitment: 'confirmed',
+    });
+
+    const program = new anchor.Program<DeorgVotingProgram>(
+      idl as DeorgVotingProgram,
+      provider,
     );
 
-    return data;
+    const organization = await program.account.organization.fetch(
+      new PublicKey(organizationAccount),
+    );
+
+    const treasuryTokenRegistry =
+      await program.account.treasuryTokenRegistry.all([
+        {
+          memcmp: {
+            offset: 8,
+            bytes: organizationAccount,
+          },
+        },
+      ]);
+
+    const treasuryBalances: {
+      tokenAccount: string;
+      mint: string;
+      raw: string;
+      ui: number | null;
+      decimals: number;
+    }[] = [];
+    for (const tokenAccount of treasuryTokenRegistry[0].account.tokenAccounts) {
+      if (tokenAccount.tokenAccount) {
+        const treasuryTokenAccountAmount =
+          await this.connection.getTokenAccountBalance(
+            tokenAccount.tokenAccount,
+          );
+
+        treasuryBalances.push({
+          tokenAccount: tokenAccount.tokenAccount.toBase58(),
+          mint: tokenAccount.mint.toBase58(),
+          raw: treasuryTokenAccountAmount.value.amount,
+          ui: treasuryTokenAccountAmount.value.uiAmount,
+          decimals: treasuryTokenAccountAmount.value.decimals,
+        });
+      }
+    }
+
+    let orgmetadata: any = {};
+    try {
+      const result = await program.account.organizationMetadata.all([
+        {
+          memcmp: {
+            offset: 8,
+            bytes: organizationAccount,
+          },
+        },
+      ]);
+
+      orgmetadata = {
+        logoUrl: result[0].account.logoUrl,
+        websiteUrl: result[0].account.websiteUrl,
+        twitterUrl: result[0].account.twitterUrl,
+        discordUrl: result[0].account.discordUrl,
+        telegramUrl: result[0].account.telegramUrl,
+        description: result[0].account.description,
+      };
+    } catch (error) {
+      console.error('Error fetching organization metadata', error);
+    }
+
+    return {
+      accountAddress: organizationAccount,
+      creator: organization.creator.toBase58(),
+      uuid: convertUuid(organization.uuid),
+      name: organization.name,
+      contributors: organization.contributors.map((contributor) =>
+        contributor.toBase58(),
+      ),
+      contributorProposalThresholdPercentage:
+        organization.contributorProposalThresholdPercentage,
+      contributorProposalValidityPeriod:
+        organization.contributorProposalValidityPeriod.toNumber(),
+      treasuryTransferQuorumPercentage:
+        organization.treasuryTransferQuorumPercentage,
+      tokenMint: organization.tokenMint.toBase58(),
+      treasuryTransferThresholdPercentage:
+        organization.treasuryTransferThresholdPercentage,
+      treasuryTransferProposalValidityPeriod:
+        organization.treasuryTransferProposalValidityPeriod.toNumber(),
+      minimumTokenRequirement: organization.minimumTokenRequirement.toNumber(),
+      contributorValidityPeriod:
+        organization.contributorValidityPeriod.toNumber(),
+      projectProposalValidityPeriod:
+        organization.projectProposalValidityPeriod.toNumber(),
+      contributorProposalQuorumPercentage:
+        organization.contributorProposalQuorumPercentage,
+      projectProposalThresholdPercentage:
+        organization.projectProposalThresholdPercentage,
+      treasuryBalances,
+      metadata: orgmetadata,
+    };
   }
 }
