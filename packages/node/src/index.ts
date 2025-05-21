@@ -31,6 +31,7 @@ import { createTaskProposalInstruction } from './instructions/create-task-propos
 import { voteTaskProposalInstruction } from './instructions/vote-task-proposal-instruction';
 import { createProjectProposalInstruction } from './instructions/create-project-proposal-instruction';
 import { voteProjectProposalInstruction } from './instructions/vote-project-proposal-instruction';
+import { completeTaskInstruction } from './instructions/complete-task-instruction';
 
 export class Deorg {
   connection: Connection;
@@ -42,6 +43,7 @@ export class Deorg {
     );
   }
 
+  // transactions
   async createOrganizationTransaction(dto: CreateOrganizationDto) {
     const { instruction, metadataInstruction, organizationPDA } =
       await createOrganizationInstruction(
@@ -244,6 +246,38 @@ export class Deorg {
     };
   }
 
+  async completeTaskTransaction(taskAddress: string) {
+    const task = await this.getTaskDetails(taskAddress);
+
+    const project = await this.getProjectDetails(task.project);
+
+    const organization = await this.getOrganizationDetails(
+      project.organization,
+    );
+
+    const { instruction } = await completeTaskInstruction(
+      taskAddress,
+      this.connection,
+      this.PROGRAM_ID,
+      organization.tokenMint,
+      new PublicKey(task.assignee),
+      new PublicKey(project.accountAddress),
+    );
+
+    const transaction = new Transaction();
+    transaction.add(instruction);
+    transaction.feePayer = new PublicKey(task.assignee);
+    transaction.recentBlockhash = (
+      await this.connection.getLatestBlockhash()
+    ).blockhash;
+
+    return {
+      transaction,
+    };
+  }
+
+  // Lists
+
   async getOrganizations() {
     const program = new anchor.Program<DeorgVotingProgram>(
       idl as DeorgVotingProgram,
@@ -418,6 +452,167 @@ export class Deorg {
         organization.projectProposalThresholdPercentage,
       treasuryBalances,
       metadata: orgmetadata,
+    };
+  }
+
+  async getTasks(projectAddress: string) {
+    // Create a dummy wallet provider for read-only operations
+    const dummyWallet = {
+      publicKey: PublicKey.default,
+      signTransaction: async (tx: any) => tx,
+      signAllTransactions: async (txs: any[]) => txs,
+    } as anchor.Wallet;
+
+    const provider = new anchor.AnchorProvider(this.connection, dummyWallet, {
+      commitment: 'confirmed',
+      preflightCommitment: 'confirmed',
+    });
+
+    const program = new anchor.Program<DeorgVotingProgram>(
+      idl as DeorgVotingProgram,
+      provider,
+    );
+
+    const tasks = await program.account.task.all([
+      {
+        memcmp: {
+          offset: 8,
+          bytes: projectAddress,
+        },
+      },
+    ]);
+
+    return tasks.map((task) => ({
+      accountAddress: task.publicKey.toBase58(),
+      project: task.account.project.toBase58(),
+      description: task.account.description,
+      title: task.account.title,
+      paymentAmount: task.account.paymentAmount.toNumber(),
+      assignee: task.account.assignee.toBase58(),
+      votesFor: task.account.votesFor,
+      votesAgainst: task.account.votesAgainst,
+      status: Object.keys(task.account.status)[0],
+      voters: task.account.voters.map((voter) => voter.toBase58()),
+      transferProposal: task.account.transferProposal?.toBase58(),
+      vault: task.account.vault?.toBase58(),
+      reviewer: task.account.reviewer?.toBase58(),
+    }));
+  }
+
+  async getUserTasks(userAddress: string) {
+    // Create a dummy wallet provider for read-only operations
+    const dummyWallet = {
+      publicKey: PublicKey.default,
+      signTransaction: async (tx: any) => tx,
+      signAllTransactions: async (txs: any[]) => txs,
+    } as anchor.Wallet;
+
+    const provider = new anchor.AnchorProvider(this.connection, dummyWallet, {
+      commitment: 'confirmed',
+      preflightCommitment: 'confirmed',
+    });
+
+    const program = new anchor.Program<DeorgVotingProgram>(
+      idl as DeorgVotingProgram,
+      provider,
+    );
+
+    // Account discriminator (8) + project pubkey (32) = 40
+    const discriminatorOffset = 8;
+    const projectOffset = 32;
+
+    const tasks = await program.account.task.all([
+      {
+        memcmp: {
+          offset: discriminatorOffset + projectOffset,
+          bytes: userAddress,
+        },
+      },
+    ]);
+
+    return tasks.map((task) => ({
+      accountAddress: task.publicKey.toBase58(),
+      project: task.account.project.toBase58(),
+      title: task.account.title,
+      paymentAmount: task.account.paymentAmount.toNumber(),
+      assignee: task.account.assignee.toBase58(),
+      votesFor: task.account.votesFor,
+      votesAgainst: task.account.votesAgainst,
+      status: Object.keys(task.account.status)[0],
+      voters: task.account.voters.map((voter) => voter.toBase58()),
+      transferProposal: task.account.transferProposal?.toBase58(),
+      vault: task.account.vault?.toBase58(),
+      reviewer: task.account.reviewer?.toBase58(),
+    }));
+  }
+
+  async getTaskDetails(taskAddress: string) {
+    // Create a dummy wallet provider for read-only operations
+    const dummyWallet = {
+      publicKey: PublicKey.default,
+      signTransaction: async (tx: any) => tx,
+      signAllTransactions: async (txs: any[]) => txs,
+    } as anchor.Wallet;
+
+    const provider = new anchor.AnchorProvider(this.connection, dummyWallet, {
+      commitment: 'confirmed',
+      preflightCommitment: 'confirmed',
+    });
+
+    const program = new anchor.Program<DeorgVotingProgram>(
+      idl as DeorgVotingProgram,
+      provider,
+    );
+
+    const task = await program.account.task.fetch(new PublicKey(taskAddress));
+
+    return {
+      accountAddress: taskAddress,
+      project: task.project.toBase58(),
+      title: task.title,
+      paymentAmount: task.paymentAmount.toNumber(),
+      assignee: task.assignee.toBase58(),
+      votesFor: task.votesFor,
+      votesAgainst: task.votesAgainst,
+      status: Object.keys(task.status)[0],
+      voters: task.voters.map((voter) => voter.toBase58()),
+      transferProposal: task.transferProposal?.toBase58(),
+      vault: task.vault?.toBase58(),
+      reviewer: task.reviewer?.toBase58(),
+    };
+  }
+
+  async getProjectDetails(projectAccountAddress: string) {
+    // Create a dummy wallet provider for read-only operations
+    const dummyWallet = {
+      publicKey: PublicKey.default,
+      signTransaction: async (tx: any) => tx,
+      signAllTransactions: async (txs: any[]) => txs,
+    } as anchor.Wallet;
+
+    const provider = new anchor.AnchorProvider(this.connection, dummyWallet, {
+      commitment: 'confirmed',
+      preflightCommitment: 'confirmed',
+    });
+
+    const program = new anchor.Program<DeorgVotingProgram>(
+      idl as DeorgVotingProgram,
+      provider,
+    );
+
+    const project = await program.account.project.fetch(
+      new PublicKey(projectAccountAddress),
+    );
+
+    return {
+      accountAddress: projectAccountAddress,
+      organization: project.organization.toBase58(),
+      uuid: convertUuid(project.uuid),
+      title: project.title,
+      members: project.members.map((member) => member.toBase58()),
+      taskApprovalThreshold: project.taskApprovalThreshold,
+      validityEndTime: project.validityEndTime.toNumber(),
+      isActive: project.isActive,
     };
   }
 }
