@@ -50,3 +50,12 @@ export type CreateTaskProposalDto = {
   organizationAddress: string;
   proposerWallet: string;
 };
+
+export type VoteTaskProposalDto = {
+  organizationAddress: string;
+  proposalAddress: string;
+  vote: boolean;
+  proposerWallet: string;
+  projectAddress: string;
+  assignee: string;
+};
