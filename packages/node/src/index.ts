@@ -800,4 +800,4 @@ export class Deorg {
 }
 
 export type { DeorgVotingProgram } from './deorg_voting_program';
-export { default as idl } from './deorg_voting_program.json';
+export { idl };
