@@ -799,4 +799,5 @@ export class Deorg {
   }
 }
 
-export * from './deorg_voting_program';
+export type { DeorgVotingProgram } from './deorg_voting_program';
+export { default as idl } from './deorg_voting_program.json';
