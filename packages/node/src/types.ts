@@ -40,3 +40,13 @@ export type VoteContributorProposalDto = {
   proposedRate: number;
   tokenMint: string;
 };
+
+export type CreateTaskProposalDto = {
+  projectAddress: string;
+  title: string;
+  paymentAmount: number;
+  assignee: string;
+  description: string;
+  organizationAddress: string;
+  proposerWallet: string;
+};

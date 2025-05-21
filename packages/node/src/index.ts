@@ -9,6 +9,7 @@ import {
 import {
   CreateContributorProposalDto,
   CreateOrganizationDto,
+  CreateTaskProposalDto,
   DeorgConfig,
   VoteContributorProposalDto,
 } from './types';
@@ -23,6 +24,7 @@ import { DeorgVotingProgram } from './deorg_voting_program';
 import * as anchor from '@coral-xyz/anchor';
 import { createContributorProposalInstruction } from './instructions/create-contributor-proposal-instruction';
 import { voteContributorProposalInstruction } from './instructions/vote-contributor-proposal-instruction';
+import { createTaskProposalInstruction } from './instructions/create-task-proposal-instruction';
 
 export class Deorg {
   connection: Connection;
@@ -123,6 +125,31 @@ export class Deorg {
         this.connection,
         this.PROGRAM_ID,
       );
+
+    const transaction = new Transaction();
+    transaction.add(instruction);
+    transaction.feePayer = new PublicKey(dto.proposerWallet);
+    transaction.recentBlockhash = (
+      await this.connection.getLatestBlockhash()
+    ).blockhash;
+
+    return {
+      transaction,
+      proposalPDA,
+    };
+  }
+
+  async createTaskProposalTransaction(dto: CreateTaskProposalDto) {
+    const organization = await this.getOrganizationDetails(
+      dto.organizationAddress,
+    );
+
+    const { instruction, proposalPDA } = await createTaskProposalInstruction(
+      dto,
+      organization.tokenMint,
+      this.connection,
+      this.PROGRAM_ID,
+    );
 
     const transaction = new Transaction();
     transaction.add(instruction);
