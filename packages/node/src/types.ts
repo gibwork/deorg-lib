@@ -1,3 +1,5 @@
+import { PublicKey } from '@solana/web3.js';
+
 export type DeorgConfig = {
   rpcUrl?: string;
 };
@@ -58,4 +60,15 @@ export type VoteTaskProposalDto = {
   proposerWallet: string;
   projectAddress: string;
   assignee: string;
+};
+
+export type CreateProjectProposalDto = {
+  id: string;
+  name: string;
+  description: string;
+  members: PublicKey[];
+  organizationAddress: string;
+  projectProposalThreshold: number;
+  projectProposalValidityPeriod: number;
+  proposerWallet: string;
 };

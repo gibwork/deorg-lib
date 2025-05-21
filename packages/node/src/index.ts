@@ -9,6 +9,7 @@ import {
 import {
   CreateContributorProposalDto,
   CreateOrganizationDto,
+  CreateProjectProposalDto,
   CreateTaskProposalDto,
   DeorgConfig,
   VoteContributorProposalDto,
@@ -27,6 +28,7 @@ import { createContributorProposalInstruction } from './instructions/create-cont
 import { voteContributorProposalInstruction } from './instructions/vote-contributor-proposal-instruction';
 import { createTaskProposalInstruction } from './instructions/create-task-proposal-instruction';
 import { voteTaskProposalInstruction } from './instructions/vote-task-proposal-instruction';
+import { createProjectProposalInstruction } from './instructions/create-project-proposal-instruction';
 
 export class Deorg {
   connection: Connection;
@@ -188,6 +190,31 @@ export class Deorg {
     return {
       transaction,
       contributorPDA,
+    };
+  }
+
+  async createProjectProposalTransaction(dto: CreateProjectProposalDto) {
+    const organization = await this.getOrganizationDetails(
+      dto.organizationAddress,
+    );
+
+    const { instruction, proposalPDA } = await createProjectProposalInstruction(
+      dto,
+      this.connection,
+      this.PROGRAM_ID,
+      organization.tokenMint,
+    );
+
+    const transaction = new Transaction();
+    transaction.add(instruction);
+    transaction.feePayer = new PublicKey(dto.proposerWallet);
+    transaction.recentBlockhash = (
+      await this.connection.getLatestBlockhash()
+    ).blockhash;
+
+    return {
+      transaction,
+      proposalPDA,
     };
   }
 
