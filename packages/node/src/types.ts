@@ -32,3 +32,11 @@ export type CreateContributorProposalDto = {
   proposedRate: number;
   tokenMint: string;
 };
+
+export type VoteContributorProposalDto = {
+  organizationAccount: string;
+  candidateWallet: string;
+  proposerWallet: string;
+  proposedRate: number;
+  tokenMint: string;
+};
