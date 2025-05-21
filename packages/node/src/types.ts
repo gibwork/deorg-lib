@@ -15,7 +15,7 @@ export type CreateOrganizationDto = {
   treasuryTransferThresholdPercentage?: number;
   treasuryTransferProposalValidityPeriod?: number;
   treasuryTransferQuorumPercentage?: number;
-  userPrimaryWallet: string;
+  creatorWallet: string;
   organizationId: string;
   logoUrl?: string;
   websiteUrl?: string;

@@ -11,8 +11,6 @@
     "lint": "eslint \"packages/**/*.ts\" --fix"
   },
   "dependencies": {
-    "@coral-xyz/anchor": "^0.31.1",
-    "@solana/web3.js": "^1.98.2",
     "@typescript-eslint/eslint-plugin": "^7.16.1",
     "@typescript-eslint/parser": "^7.16.1",
     "eslint": "^8.20.0",
