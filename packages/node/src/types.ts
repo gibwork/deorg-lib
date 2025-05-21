@@ -72,3 +72,10 @@ export type CreateProjectProposalDto = {
   projectProposalValidityPeriod: number;
   proposerWallet: string;
 };
+
+export type VoteProjectProposalDto = {
+  organizationAddress: string;
+  proposalAddress: string;
+  vote: boolean;
+  proposerWallet: string;
+};
