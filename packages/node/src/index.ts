@@ -6,7 +6,11 @@ import {
   PublicKey,
   Transaction,
 } from '@solana/web3.js';
-import { CreateOrganizationDto, DeorgConfig } from './types';
+import {
+  CreateContributorProposalDto,
+  CreateOrganizationDto,
+  DeorgConfig,
+} from './types';
 import idl from './deorg_voting_program.json';
 import {
   createOrganizationInstruction,
@@ -16,6 +20,7 @@ import {
 import { convertUuid } from './helpers/convertUuid';
 import { DeorgVotingProgram } from './deorg_voting_program';
 import * as anchor from '@coral-xyz/anchor';
+import { createContributorProposalInstruction } from './instructions/create-contributor-proposal-instruction';
 
 export class Deorg {
   connection: Connection;
@@ -80,7 +85,98 @@ export class Deorg {
       tx.sign(treasuryTokenKeypair);
     }
 
-    return tx;
+    return {
+      transaction: tx,
+      organizationPDA,
+    };
+  }
+
+  async createContributorProposalTransaction(
+    dto: CreateContributorProposalDto,
+  ) {
+    const { instruction, proposalPDA } =
+      await createContributorProposalInstruction(
+        dto,
+        this.connection,
+        this.PROGRAM_ID,
+      );
+
+    const transaction = new Transaction();
+    transaction.add(instruction);
+    transaction.feePayer = new PublicKey(dto.proposerWallet);
+    transaction.recentBlockhash = (
+      await this.connection.getLatestBlockhash()
+    ).blockhash;
+
+    return {
+      transaction,
+      proposalPDA,
+    };
+  }
+
+  async getOrganizations() {
+    const program = new anchor.Program<DeorgVotingProgram>(
+      idl as DeorgVotingProgram,
+      {
+        connection: this.connection,
+      },
+    );
+
+    const organizations = await program.account.organization.all([]);
+
+    const metadata = await program.account.organizationMetadata.all([]);
+
+    const organizationsData = organizations.map((organization) => {
+      const meta = metadata.find(
+        (m) =>
+          m.account.organization.toBase58() ===
+          organization.publicKey.toBase58(),
+      );
+
+      return {
+        ...organization,
+        metadata: {
+          logoUrl: meta?.account.logoUrl,
+          websiteUrl: meta?.account.websiteUrl,
+          twitterUrl: meta?.account.twitterUrl,
+          discordUrl: meta?.account.discordUrl,
+          telegramUrl: meta?.account.telegramUrl,
+          description: meta?.account.description,
+        },
+      };
+    });
+
+    return organizationsData.map((organization) => ({
+      accountAddress: organization.publicKey.toBase58(),
+      creator: organization.account.creator.toBase58(),
+      uuid: convertUuid(organization.account.uuid),
+      name: organization.account.name,
+      contributors: organization.account.contributors.map((contributor) =>
+        contributor.toBase58(),
+      ),
+      contributorProposalThresholdPercentage:
+        organization.account.contributorProposalThresholdPercentage,
+      contributorProposalValidityPeriod:
+        organization.account.contributorProposalValidityPeriod.toNumber(),
+      treasuryTransferQuorumPercentage:
+        organization.account.treasuryTransferQuorumPercentage,
+      tokenMint: organization.account.tokenMint.toBase58(),
+      treasuryTransferThresholdPercentage:
+        organization.account.treasuryTransferThresholdPercentage,
+      treasuryTransferProposalValidityPeriod:
+        organization.account.treasuryTransferProposalValidityPeriod.toNumber(),
+      minimumTokenRequirement:
+        organization.account.minimumTokenRequirement.toNumber(),
+      contributorValidityPeriod:
+        organization.account.contributorValidityPeriod.toNumber(),
+      projectProposalValidityPeriod:
+        organization.account.projectProposalValidityPeriod.toNumber(),
+      contributorProposalQuorumPercentage:
+        organization.account.contributorProposalQuorumPercentage,
+      projectProposalThresholdPercentage:
+        organization.account.projectProposalThresholdPercentage,
+      metadata: organization.metadata,
+    }));
   }
 
   async getOrganizationDetails(organizationAccount: string) {

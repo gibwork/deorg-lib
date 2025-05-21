@@ -24,3 +24,11 @@ export type CreateOrganizationDto = {
   telegramUrl?: string;
   description?: string;
 };
+
+export type CreateContributorProposalDto = {
+  organizationAccount: string;
+  candidateWallet: string;
+  proposerWallet: string;
+  proposedRate: number;
+  tokenMint: string;
+};
