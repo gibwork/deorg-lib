@@ -798,3 +798,5 @@ export class Deorg {
     }));
   }
 }
+
+export * from './deorg_voting_program';
