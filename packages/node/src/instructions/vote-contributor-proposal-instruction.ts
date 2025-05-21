@@ -3,7 +3,7 @@ import { DeorgVotingProgram } from '../deorg_voting_program';
 import { VoteContributorProposalDto } from '../types';
 import * as anchor from '@coral-xyz/anchor';
 import idl from '../deorg_voting_program.json';
-import BN from 'bignumber.js';
+import { getProposalCandidateKey } from '../helpers/get-proposal-candidate-key';
 
 export async function voteContributorProposalInstruction(
   dto: VoteContributorProposalDto,
@@ -17,12 +17,10 @@ export async function voteContributorProposalInstruction(
     },
   );
 
-  // Verify they're valid public keys
-  const organization = new PublicKey(dto.organizationAccount);
-  const candidate = new PublicKey(dto.candidateWallet);
+  const organization = new PublicKey(dto.organizationAddress);
+  const proposal = new PublicKey(dto.proposalAddress);
   const tokenMint = new PublicKey(dto.tokenMint);
 
-  // Find proposer token account
   const tokenAccounts = await connection.getParsedTokenAccountsByOwner(
     new PublicKey(dto.proposerWallet),
     { mint: tokenMint },
@@ -32,41 +30,32 @@ export async function voteContributorProposalInstruction(
     throw new Error('No token account found for the organization token mint');
   }
 
-  const proposerTokenAccount = tokenAccounts.value[0].pubkey;
+  const voterTokenAccount = tokenAccounts.value[0].pubkey;
 
-  // Calculate PDA for contributor proposal
-  const [proposalPDA] = await PublicKey.findProgramAddress(
+  // Calculate PDA for the contributor account that will be created/updated
+  const [contributorPDA] = await PublicKey.findProgramAddress(
     [
-      Buffer.from('contributor_proposal'),
+      Buffer.from('contributor'),
       organization.toBuffer(),
-      candidate.toBuffer(),
+      // Get the candidate pubkey from the proposal account data
+      await getProposalCandidateKey(connection, proposal),
     ],
     programId,
   );
 
-  // Calculate PDA for the contributor account that might be created
-  const [contributorPDA] = await PublicKey.findProgramAddress(
-    [Buffer.from('contributor'), organization.toBuffer(), candidate.toBuffer()],
-    programId,
-  );
-
-  const instruction = program.instruction.proposeContributor(
-    new BN(dto.proposedRate),
-    {
-      accounts: {
-        organization,
-        candidate,
-        proposerTokenAccount,
-        contributor: contributorPDA,
-        systemProgram: SystemProgram.programId,
-        proposal: proposalPDA,
-        proposer: new PublicKey(dto.proposerWallet),
-      },
+  const instruction = program.instruction.voteOnContributorProposal(dto.vote, {
+    accounts: {
+      organization,
+      proposal,
+      contributor: contributorPDA,
+      voterTokenAccount,
+      systemProgram: SystemProgram.programId,
+      voter: new PublicKey(dto.proposerWallet),
     },
-  );
+  });
 
   return {
     instruction,
-    proposalPDA,
+    contributorPDA,
   };
 }

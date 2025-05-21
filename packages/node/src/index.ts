@@ -12,6 +12,7 @@ import {
   CreateProjectProposalDto,
   CreateTaskProposalDto,
   DeorgConfig,
+  ProposalType,
   VoteContributorProposalDto,
   VoteProjectProposalDto,
   VoteTaskProposalDto,
@@ -128,7 +129,7 @@ export class Deorg {
   }
 
   async voteContributorProposalTransaction(dto: VoteContributorProposalDto) {
-    const { instruction, proposalPDA } =
+    const { instruction, contributorPDA } =
       await voteContributorProposalInstruction(
         dto,
         this.connection,
@@ -144,7 +145,7 @@ export class Deorg {
 
     return {
       transaction,
-      proposalPDA,
+      contributorPDA,
     };
   }
 
@@ -277,7 +278,10 @@ export class Deorg {
     };
   }
 
-  async enableTaskVaultWithdrawalTransaction(taskAddress: string) {
+  async enableTaskVaultWithdrawalTransaction(
+    taskAddress: string,
+    reviewer: string,
+  ) {
     const task = await this.getTaskDetails(taskAddress);
 
     if (!task.vault) {
@@ -292,7 +296,7 @@ export class Deorg {
 
     const { instruction } = await enableTaskVaultWithdrawalInstruction(
       taskAddress,
-      task.assignee,
+      reviewer,
       this.connection,
       this.PROGRAM_ID,
       organization.tokenMint,
@@ -651,5 +655,146 @@ export class Deorg {
       validityEndTime: project.validityEndTime.toNumber(),
       isActive: project.isActive,
     };
+  }
+
+  async getOrganizationProposals(organizationAddress: string) {
+    // Create a dummy wallet provider for read-only operations
+    const dummyWallet = {
+      publicKey: PublicKey.default,
+      signTransaction: async (tx: any) => tx,
+      signAllTransactions: async (txs: any[]) => txs,
+    } as anchor.Wallet;
+
+    const provider = new anchor.AnchorProvider(this.connection, dummyWallet, {
+      commitment: 'confirmed',
+      preflightCommitment: 'confirmed',
+    });
+
+    const program = new anchor.Program<DeorgVotingProgram>(
+      idl as DeorgVotingProgram,
+      provider,
+    );
+
+    const contributorProposals = await program.account.contributorProposal.all([
+      {
+        memcmp: {
+          offset: 8,
+          bytes: organizationAddress,
+        },
+      },
+    ]);
+
+    const projectProposals = await program.account.projectProposal.all([
+      {
+        memcmp: {
+          offset: 8,
+          bytes: organizationAddress,
+        },
+      },
+    ]);
+
+    const taskProposals = await program.account.taskProposal.all([
+      {
+        memcmp: {
+          offset: 8,
+          bytes: organizationAddress,
+        },
+      },
+    ]);
+
+    const proposals = [
+      ...contributorProposals.map((proposal) => ({
+        type: ProposalType.CONTRIBUTOR,
+        proposalAddress: proposal.publicKey.toBase58(),
+        organization: proposal.account.organization.toBase58(),
+        candidate: proposal.account.candidate.toBase58(),
+        proposer: proposal.account.proposer.toBase58(),
+        proposedRate: proposal.account.proposedRate.toNumber(),
+        createdAt: proposal.account.createdAt.toNumber(),
+        expiresAt: proposal.account.expiresAt.toNumber(),
+        voters: proposal.account.voters.map((voter) => voter.toBase58()),
+        votesFor: proposal.account.votesFor,
+        votesAgainst: proposal.account.votesAgainst,
+        status: Object.keys(proposal.account.status)[0],
+        votesTotal: proposal.account.votesFor + proposal.account.votesAgainst,
+      })),
+      ...projectProposals.map((proposal) => ({
+        type: ProposalType.PROJECT,
+        proposalAddress: proposal.publicKey.toBase58(),
+        organization: proposal.account.organization.toBase58(),
+        candidate: proposal.account.memberPubkeys[0].toBase58(),
+        proposer: proposal.account.proposer.toBase58(),
+        proposedRate: proposal.account.taskApprovalThreshold,
+        createdAt: proposal.account.createdAt.toNumber(),
+        expiresAt: proposal.account.expiresAt.toNumber(),
+        voters: proposal.account.voters.map((voter) => voter.toBase58()),
+        votesFor: proposal.account.votesFor,
+        votesAgainst: proposal.account.votesAgainst,
+        status: Object.keys(proposal.account.status)[0],
+        votesTotal: proposal.account.votesFor + proposal.account.votesAgainst,
+      })),
+      ...taskProposals.map((proposal) => ({
+        type: ProposalType.TASK,
+        proposalAddress: proposal.publicKey.toBase58(),
+        organization: proposal.account.organization.toBase58(),
+        candidate: proposal.account.assignee.toBase58(),
+        proposer: proposal.account.proposer.toBase58(),
+        proposedRate: proposal.account.paymentAmount.toNumber(),
+        createdAt: proposal.account.createdAt.toNumber(),
+        expiresAt: proposal.account.expiresAt.toNumber(),
+        voters: proposal.account.voters.map((voter) => voter.toBase58()),
+        votesFor: proposal.account.votesFor,
+        votesAgainst: proposal.account.votesAgainst,
+        status: Object.keys(proposal.account.status)[0],
+        votesTotal: proposal.account.votesFor + proposal.account.votesAgainst,
+        amount: proposal.account.paymentAmount.toNumber(),
+        project: proposal.account.project.toBase58(),
+        title: proposal.account.title,
+        projectAddress: proposal.account.project.toBase58(),
+        assignee: proposal.account.assignee.toBase58(),
+      })),
+    ];
+
+    return proposals;
+  }
+
+  async getOrganizationProjects(organizationAddress: string) {
+    // Create a dummy wallet provider for read-only operations
+    const dummyWallet = {
+      publicKey: PublicKey.default,
+      signTransaction: async (tx: any) => tx,
+      signAllTransactions: async (txs: any[]) => txs,
+    } as anchor.Wallet;
+
+    const provider = new anchor.AnchorProvider(this.connection, dummyWallet, {
+      commitment: 'confirmed',
+      preflightCommitment: 'confirmed',
+    });
+
+    const program = new anchor.Program<DeorgVotingProgram>(
+      idl as DeorgVotingProgram,
+      provider,
+    );
+
+    const projects = await program.account.project.all([
+      {
+        memcmp: {
+          offset: 8,
+          bytes: organizationAddress,
+        },
+      },
+    ]);
+
+    return projects.map((project) => ({
+      accountAddress: project.publicKey.toBase58(),
+      organization: project.account.organization.toBase58(),
+      uuid: project.account.uuid,
+      title: project.account.title,
+      description: project.account.description,
+      members: project.account.members.map((member) => member.toBase58()),
+      taskApprovalThreshold: project.account.taskApprovalThreshold,
+      validityEndTime: project.account.validityEndTime.toNumber(),
+      isActive: project.account.isActive,
+    }));
   }
 }

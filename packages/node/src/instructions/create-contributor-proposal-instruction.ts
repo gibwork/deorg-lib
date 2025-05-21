@@ -3,7 +3,7 @@ import * as anchor from '@coral-xyz/anchor';
 import { DeorgVotingProgram } from '../deorg_voting_program';
 import idl from '../deorg_voting_program.json';
 import { Connection, PublicKey, SystemProgram } from '@solana/web3.js';
-import BN from 'bignumber.js';
+import BN from 'bn.js';
 
 export async function createContributorProposalInstruction(
   dto: CreateContributorProposalDto,

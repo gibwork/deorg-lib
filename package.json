@@ -8,15 +8,27 @@
   ],
   "scripts": {
     "build": "yarn workspaces run build",
-    "lint": "eslint \"packages/**/*.ts\" --fix"
+    "lint": "eslint \"packages/**/*.ts\" --fix",
+    "example:create-org": "ts-node examples/create-org.ts",
+    "example:create-contributor-proposal": "ts-node examples/create-contributor-proposal.ts",
+    "example:vote-contributor-proposal": "ts-node examples/vote-contributor-proposal.ts",
+    "example:create-project": "ts-node examples/create-project.ts",
+    "example:vote-project-proposal": "ts-node examples/vote-project-proposal.ts",
+    "example:create-task-proposal": "ts-node examples/create-task-proposal.ts",
+    "example:vote-task-proposal": "ts-node examples/vote-task-proposal.ts",
+    "example:complete-task": "ts-node examples/complete-task.ts",
+    "example:enable-task-withdraw": "ts-node examples/enable-task-withdraw.ts"
   },
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^7.16.1",
     "@typescript-eslint/parser": "^7.16.1",
+    "bn.js": "^5.2.2",
+    "dotenv": "^16.5.0",
     "eslint": "^8.20.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "prettier": "^3.3.3",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
 }

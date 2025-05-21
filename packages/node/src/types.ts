@@ -36,10 +36,10 @@ export type CreateContributorProposalDto = {
 };
 
 export type VoteContributorProposalDto = {
-  organizationAccount: string;
-  candidateWallet: string;
+  organizationAddress: string;
+  proposalAddress: string;
+  vote: boolean;
   proposerWallet: string;
-  proposedRate: number;
   tokenMint: string;
 };
 
@@ -79,3 +79,9 @@ export type VoteProjectProposalDto = {
   vote: boolean;
   proposerWallet: string;
 };
+
+export enum ProposalType {
+  CONTRIBUTOR = 'CONTRIBUTOR',
+  PROJECT = 'PROJECT',
+  TASK = 'TASK',
+}
