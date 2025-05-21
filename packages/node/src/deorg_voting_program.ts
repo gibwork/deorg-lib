@@ -60,20 +60,20 @@ export type DeorgVotingProgram = {
                   114,
                   105,
                   116,
-                  121
+                  121,
                 ];
               },
               {
                 kind: 'account';
                 path: 'task';
-              }
+              },
             ];
           };
         },
         {
           name: 'tokenProgram';
           address: 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
-        }
+        },
       ];
       args: [];
     },
@@ -105,7 +105,7 @@ export type DeorgVotingProgram = {
                   116,
                   105,
                   111,
-                  110
+                  110,
                 ];
               },
               {
@@ -115,7 +115,7 @@ export type DeorgVotingProgram = {
               {
                 kind: 'arg';
                 path: 'organizationUuid';
-              }
+              },
             ];
           };
         },
@@ -135,7 +135,7 @@ export type DeorgVotingProgram = {
               {
                 kind: 'account';
                 path: 'creator';
-              }
+              },
             ];
           };
         },
@@ -148,7 +148,7 @@ export type DeorgVotingProgram = {
         {
           name: 'systemProgram';
           address: '11111111111111111111111111111111';
-        }
+        },
       ];
       args: [
         {
@@ -204,7 +204,7 @@ export type DeorgVotingProgram = {
         {
           name: 'creatorRate';
           type: 'u64';
-        }
+        },
       ];
     },
     {
@@ -238,14 +238,14 @@ export type DeorgVotingProgram = {
               {
                 kind: 'arg';
                 path: 'projectUuid';
-              }
+              },
             ];
           };
         },
         {
           name: 'systemProgram';
           address: '11111111111111111111111111111111';
-        }
+        },
       ];
       args: [
         {
@@ -253,7 +253,7 @@ export type DeorgVotingProgram = {
           type: {
             array: ['u8', 16];
           };
-        }
+        },
       ];
     },
     {
@@ -291,13 +291,13 @@ export type DeorgVotingProgram = {
                   115,
                   116,
                   114,
-                  121
+                  121,
                 ];
               },
               {
                 kind: 'account';
                 path: 'organization';
-              }
+              },
             ];
           };
         },
@@ -332,13 +332,13 @@ export type DeorgVotingProgram = {
                   114,
                   105,
                   116,
-                  121
+                  121,
                 ];
               },
               {
                 kind: 'account';
                 path: 'organization';
-              }
+              },
             ];
           };
         },
@@ -349,13 +349,13 @@ export type DeorgVotingProgram = {
         {
           name: 'tokenProgram';
           address: 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
-        }
+        },
       ];
       args: [
         {
           name: 'amount';
           type: 'u64';
-        }
+        },
       ];
     },
     {
@@ -407,13 +407,13 @@ export type DeorgVotingProgram = {
                   114,
                   105,
                   116,
-                  121
+                  121,
                 ];
               },
               {
                 kind: 'account';
                 path: 'task';
-              }
+              },
             ];
           };
         },
@@ -428,7 +428,7 @@ export type DeorgVotingProgram = {
         {
           name: 'rent';
           address: 'SysvarRent111111111111111111111111111111111';
-        }
+        },
       ];
       args: [];
     },
@@ -476,13 +476,13 @@ export type DeorgVotingProgram = {
                   114,
                   105,
                   116,
-                  121
+                  121,
                 ];
               },
               {
                 kind: 'account';
                 path: 'organization';
-              }
+              },
             ];
           };
         },
@@ -493,7 +493,7 @@ export type DeorgVotingProgram = {
         {
           name: 'tokenProgram';
           address: 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
-        }
+        },
       ];
       args: [];
     },
@@ -521,14 +521,14 @@ export type DeorgVotingProgram = {
               {
                 kind: 'account';
                 path: 'organization';
-              }
+              },
             ];
           };
         },
         {
           name: 'systemProgram';
           address: '11111111111111111111111111111111';
-        }
+        },
       ];
       args: [
         {
@@ -566,7 +566,7 @@ export type DeorgVotingProgram = {
           type: {
             option: 'string';
           };
-        }
+        },
       ];
     },
     {
@@ -605,20 +605,20 @@ export type DeorgVotingProgram = {
                   115,
                   116,
                   114,
-                  121
+                  121,
                 ];
               },
               {
                 kind: 'account';
                 path: 'organization';
-              }
+              },
             ];
           };
         },
         {
           name: 'systemProgram';
           address: '11111111111111111111111111111111';
-        }
+        },
       ];
       args: [];
     },
@@ -662,7 +662,7 @@ export type DeorgVotingProgram = {
                   111,
                   115,
                   97,
-                  108
+                  108,
                 ];
               },
               {
@@ -672,7 +672,7 @@ export type DeorgVotingProgram = {
               {
                 kind: 'account';
                 path: 'candidate';
-              }
+              },
             ];
           };
         },
@@ -695,7 +695,7 @@ export type DeorgVotingProgram = {
               {
                 kind: 'account';
                 path: 'candidate';
-              }
+              },
             ];
           };
         },
@@ -705,13 +705,13 @@ export type DeorgVotingProgram = {
         {
           name: 'systemProgram';
           address: '11111111111111111111111111111111';
-        }
+        },
       ];
       args: [
         {
           name: 'proposedRate';
           type: 'u64';
-        }
+        },
       ];
     },
     {
@@ -750,13 +750,13 @@ export type DeorgVotingProgram = {
                   115,
                   116,
                   114,
-                  121
+                  121,
                 ];
               },
               {
                 kind: 'account';
                 path: 'organization';
-              }
+              },
             ];
           };
         },
@@ -784,7 +784,7 @@ export type DeorgVotingProgram = {
                   115,
                   102,
                   101,
-                  114
+                  114,
                 ];
               },
               {
@@ -806,7 +806,7 @@ export type DeorgVotingProgram = {
               {
                 kind: 'arg';
                 path: 'nonce';
-              }
+              },
             ];
           };
         },
@@ -838,13 +838,13 @@ export type DeorgVotingProgram = {
                   114,
                   105,
                   116,
-                  121
+                  121,
                 ];
               },
               {
                 kind: 'account';
                 path: 'organization';
-              }
+              },
             ];
           };
         },
@@ -857,7 +857,7 @@ export type DeorgVotingProgram = {
         {
           name: 'systemProgram';
           address: '11111111111111111111111111111111';
-        }
+        },
       ];
       args: [
         {
@@ -875,7 +875,7 @@ export type DeorgVotingProgram = {
         {
           name: 'nonce';
           type: 'u64';
-        }
+        },
       ];
     },
     {
@@ -913,7 +913,7 @@ export type DeorgVotingProgram = {
                   111,
                   115,
                   97,
-                  108
+                  108,
                 ];
               },
               {
@@ -923,7 +923,7 @@ export type DeorgVotingProgram = {
               {
                 kind: 'arg';
                 path: 'title';
-              }
+              },
             ];
           };
         },
@@ -933,7 +933,7 @@ export type DeorgVotingProgram = {
         {
           name: 'systemProgram';
           address: '11111111111111111111111111111111';
-        }
+        },
       ];
       args: [
         {
@@ -957,7 +957,7 @@ export type DeorgVotingProgram = {
         {
           name: 'validityPeriod';
           type: 'i64';
-        }
+        },
       ];
     },
     {
@@ -995,7 +995,7 @@ export type DeorgVotingProgram = {
                   111,
                   115,
                   97,
-                  108
+                  108,
                 ];
               },
               {
@@ -1009,7 +1009,7 @@ export type DeorgVotingProgram = {
               {
                 kind: 'arg';
                 path: 'title';
-              }
+              },
             ];
           };
         },
@@ -1036,13 +1036,13 @@ export type DeorgVotingProgram = {
                   115,
                   116,
                   114,
-                  121
+                  121,
                 ];
               },
               {
                 kind: 'account';
                 path: 'organization';
-              }
+              },
             ];
           };
         },
@@ -1074,13 +1074,13 @@ export type DeorgVotingProgram = {
                   114,
                   105,
                   116,
-                  121
+                  121,
                 ];
               },
               {
                 kind: 'account';
                 path: 'organization';
-              }
+              },
             ];
           };
         },
@@ -1093,7 +1093,7 @@ export type DeorgVotingProgram = {
         {
           name: 'systemProgram';
           address: '11111111111111111111111111111111';
-        }
+        },
       ];
       args: [
         {
@@ -1115,7 +1115,7 @@ export type DeorgVotingProgram = {
         {
           name: 'tokenMint';
           type: 'pubkey';
-        }
+        },
       ];
     },
     {
@@ -1161,13 +1161,13 @@ export type DeorgVotingProgram = {
                   114,
                   105,
                   116,
-                  121
+                  121,
                 ];
               },
               {
                 kind: 'account';
                 path: 'organization';
-              }
+              },
             ];
           };
         },
@@ -1195,13 +1195,13 @@ export type DeorgVotingProgram = {
                   115,
                   116,
                   114,
-                  121
+                  121,
                 ];
               },
               {
                 kind: 'account';
                 path: 'organization';
-              }
+              },
             ];
           };
         },
@@ -1216,7 +1216,7 @@ export type DeorgVotingProgram = {
         {
           name: 'rent';
           address: 'SysvarRent111111111111111111111111111111111';
-        }
+        },
       ];
       args: [];
     },
@@ -1248,10 +1248,10 @@ export type DeorgVotingProgram = {
               {
                 kind: 'account';
                 path: 'authority';
-              }
+              },
             ];
           };
-        }
+        },
       ];
       args: [];
     },
@@ -1279,10 +1279,10 @@ export type DeorgVotingProgram = {
               {
                 kind: 'account';
                 path: 'organization';
-              }
+              },
             ];
           };
-        }
+        },
       ];
       args: [
         {
@@ -1320,7 +1320,7 @@ export type DeorgVotingProgram = {
           type: {
             option: 'string';
           };
-        }
+        },
       ];
     },
     {
@@ -1334,7 +1334,7 @@ export type DeorgVotingProgram = {
         {
           name: 'creator';
           signer: true;
-        }
+        },
       ];
       args: [
         {
@@ -1380,7 +1380,7 @@ export type DeorgVotingProgram = {
         {
           name: 'treasuryTransferQuorumPercentage';
           type: 'u8';
-        }
+        },
       ];
     },
     {
@@ -1417,7 +1417,7 @@ export type DeorgVotingProgram = {
                 kind: 'account';
                 path: 'proposal.candidate';
                 account: 'contributorProposal';
-              }
+              },
             ];
           };
         },
@@ -1427,13 +1427,13 @@ export type DeorgVotingProgram = {
         {
           name: 'systemProgram';
           address: '11111111111111111111111111111111';
-        }
+        },
       ];
       args: [
         {
           name: 'vote';
           type: 'bool';
-        }
+        },
       ];
     },
     {
@@ -1493,13 +1493,13 @@ export type DeorgVotingProgram = {
                   114,
                   105,
                   116,
-                  121
+                  121,
                 ];
               },
               {
                 kind: 'account';
                 path: 'organization';
-              }
+              },
             ];
           };
         },
@@ -1523,7 +1523,7 @@ export type DeorgVotingProgram = {
               {
                 kind: 'account';
                 path: 'linkedTask';
-              }
+              },
             ];
           };
         },
@@ -1554,13 +1554,13 @@ export type DeorgVotingProgram = {
                   111,
                   117,
                   110,
-                  116
+                  116,
                 ];
               },
               {
                 kind: 'account';
                 path: 'linkedTask';
-              }
+              },
             ];
           };
         },
@@ -1585,13 +1585,13 @@ export type DeorgVotingProgram = {
                   114,
                   105,
                   116,
-                  121
+                  121,
                 ];
               },
               {
                 kind: 'account';
                 path: 'linkedTask';
-              }
+              },
             ];
           };
         },
@@ -1606,13 +1606,13 @@ export type DeorgVotingProgram = {
         {
           name: 'rent';
           address: 'SysvarRent111111111111111111111111111111111';
-        }
+        },
       ];
       args: [
         {
           name: 'vote';
           type: 'bool';
-        }
+        },
       ];
     },
     {
@@ -1645,13 +1645,13 @@ export type DeorgVotingProgram = {
         {
           name: 'rent';
           address: 'SysvarRent111111111111111111111111111111111';
-        }
+        },
       ];
       args: [
         {
           name: 'vote';
           type: 'bool';
-        }
+        },
       ];
     },
     {
@@ -1704,13 +1704,13 @@ export type DeorgVotingProgram = {
                   114,
                   105,
                   116,
-                  121
+                  121,
                 ];
               },
               {
                 kind: 'account';
                 path: 'organization';
-              }
+              },
             ];
           };
         },
@@ -1734,7 +1734,7 @@ export type DeorgVotingProgram = {
               {
                 kind: 'account';
                 path: 'task';
-              }
+              },
             ];
           };
         },
@@ -1767,13 +1767,13 @@ export type DeorgVotingProgram = {
                   111,
                   117,
                   110,
-                  116
+                  116,
                 ];
               },
               {
                 kind: 'account';
                 path: 'task';
-              }
+              },
             ];
           };
         },
@@ -1798,13 +1798,13 @@ export type DeorgVotingProgram = {
                   114,
                   105,
                   116,
-                  121
+                  121,
                 ];
               },
               {
                 kind: 'account';
                 path: 'task';
-              }
+              },
             ];
           };
         },
@@ -1819,15 +1819,15 @@ export type DeorgVotingProgram = {
         {
           name: 'rent';
           address: 'SysvarRent111111111111111111111111111111111';
-        }
+        },
       ];
       args: [
         {
           name: 'vote';
           type: 'bool';
-        }
+        },
       ];
-    }
+    },
   ];
   accounts: [
     {
@@ -1873,7 +1873,7 @@ export type DeorgVotingProgram = {
     {
       name: 'treasuryTransferProposal';
       discriminator: [182, 216, 124, 142, 204, 168, 111, 130];
-    }
+    },
   ];
   events: [
     {
@@ -1955,7 +1955,7 @@ export type DeorgVotingProgram = {
     {
       name: 'voteEvent';
       discriminator: [195, 71, 250, 105, 120, 119, 234, 134];
-    }
+    },
   ];
   errors: [
     {
@@ -2192,7 +2192,7 @@ export type DeorgVotingProgram = {
       code: 6046;
       name: 'invalidMetadataDescription';
       msg: 'Invalid metadata description (too long)';
-    }
+    },
   ];
   types: [
     {
@@ -2219,7 +2219,7 @@ export type DeorgVotingProgram = {
           {
             name: 'isActive';
             type: 'bool';
-          }
+          },
         ];
       };
     },
@@ -2273,7 +2273,7 @@ export type DeorgVotingProgram = {
             type: {
               vec: 'pubkey';
             };
-          }
+          },
         ];
       };
     },
@@ -2301,7 +2301,7 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
     },
@@ -2373,7 +2373,7 @@ export type DeorgVotingProgram = {
           {
             name: 'treasuryTransferQuorumPercentage';
             type: 'u8';
-          }
+          },
         ];
       };
     },
@@ -2421,7 +2421,7 @@ export type DeorgVotingProgram = {
             type: {
               option: 'string';
             };
-          }
+          },
         ];
       };
     },
@@ -2465,7 +2465,7 @@ export type DeorgVotingProgram = {
           {
             name: 'isActive';
             type: 'bool';
-          }
+          },
         ];
       };
     },
@@ -2501,7 +2501,7 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
     },
@@ -2569,7 +2569,7 @@ export type DeorgVotingProgram = {
             type: {
               vec: 'pubkey';
             };
-          }
+          },
         ];
       };
     },
@@ -2597,7 +2597,7 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
     },
@@ -2621,7 +2621,7 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
     },
@@ -2641,7 +2641,7 @@ export type DeorgVotingProgram = {
           },
           {
             name: 'expired';
-          }
+          },
         ];
       };
     },
@@ -2709,7 +2709,7 @@ export type DeorgVotingProgram = {
             type: {
               option: 'pubkey';
             };
-          }
+          },
         ];
       };
     },
@@ -2741,7 +2741,7 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
     },
@@ -2781,7 +2781,7 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
     },
@@ -2809,7 +2809,7 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
     },
@@ -2841,7 +2841,7 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
     },
@@ -2915,7 +2915,7 @@ export type DeorgVotingProgram = {
             type: {
               vec: 'pubkey';
             };
-          }
+          },
         ];
       };
     },
@@ -2959,7 +2959,7 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
     },
@@ -2991,7 +2991,7 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
     },
@@ -3017,7 +3017,7 @@ export type DeorgVotingProgram = {
           },
           {
             name: 'paid';
-          }
+          },
         ];
       };
     },
@@ -3053,7 +3053,7 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
     },
@@ -3085,7 +3085,7 @@ export type DeorgVotingProgram = {
           {
             name: 'isWithdrawable';
             type: 'bool';
-          }
+          },
         ];
       };
     },
@@ -3121,7 +3121,7 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
     },
@@ -3149,7 +3149,7 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
     },
@@ -3177,7 +3177,7 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
     },
@@ -3209,7 +3209,7 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
     },
@@ -3229,7 +3229,7 @@ export type DeorgVotingProgram = {
           {
             name: 'isActive';
             type: 'bool';
-          }
+          },
         ];
       };
     },
@@ -3257,7 +3257,7 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
     },
@@ -3279,7 +3279,7 @@ export type DeorgVotingProgram = {
                 };
               };
             };
-          }
+          },
         ];
       };
     },
@@ -3315,7 +3315,7 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
     },
@@ -3377,7 +3377,7 @@ export type DeorgVotingProgram = {
           {
             name: 'description';
             type: 'string';
-          }
+          },
         ];
       };
     },
@@ -3413,7 +3413,7 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
     },
@@ -3441,7 +3441,7 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
     },
@@ -3465,9 +3465,9 @@ export type DeorgVotingProgram = {
           {
             name: 'timestamp';
             type: 'i64';
-          }
+          },
         ];
       };
-    }
+    },
   ];
 };
