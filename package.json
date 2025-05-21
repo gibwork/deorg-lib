@@ -1,0 +1,17 @@
+{
+  "name": "deorg",
+  "private": true,
+  "version": "1.0.0",
+  "license": "MIT",
+  "workspaces": [
+    "packages/node"
+  ],
+  "scripts": {
+    "build": "yarn workspaces run build",
+    "lint": "eslint \"packages/**/*.ts\" --fix"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.98.2",
+    "typescript": "^5.8.3"
+  }
+}
