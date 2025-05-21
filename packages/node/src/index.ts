@@ -307,7 +307,7 @@ export class Deorg {
 
     const transaction = new Transaction();
     transaction.add(instruction);
-    transaction.feePayer = new PublicKey(task.assignee);
+    transaction.feePayer = new PublicKey(reviewer);
     transaction.recentBlockhash = (
       await this.connection.getLatestBlockhash()
     ).blockhash;
