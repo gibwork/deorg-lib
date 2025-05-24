@@ -782,6 +782,10 @@
               {
                 "kind": "account",
                 "path": "candidate"
+              },
+              {
+                "kind": "arg",
+                "path": "timestamp"
               }
             ]
           }
@@ -833,6 +837,10 @@
         {
           "name": "proposed_rate",
           "type": "u64"
+        },
+        {
+          "name": "timestamp",
+          "type": "i64"
         }
       ]
     },
@@ -2747,6 +2755,11 @@
       "code": 6046,
       "name": "InvalidMetadataDescription",
       "msg": "Invalid metadata description (too long)"
+    },
+    {
+      "code": 6047,
+      "name": "InvalidTimestamp",
+      "msg": "Invalid timestamp provided (must be within 5 minutes of current time)"
     }
   ],
   "types": [

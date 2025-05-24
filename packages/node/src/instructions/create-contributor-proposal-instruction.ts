@@ -33,6 +33,7 @@ export async function createContributorProposalInstruction(
   }
 
   const proposerTokenAccount = tokenAccounts.value[0].pubkey;
+  const timestamp = Math.floor(Date.now() / 1000);
 
   // Calculate PDA for contributor proposal
   const [proposalPDA] = await PublicKey.findProgramAddress(
@@ -40,6 +41,7 @@ export async function createContributorProposalInstruction(
       Buffer.from('contributor_proposal'),
       organization.toBuffer(),
       candidate.toBuffer(),
+      Buffer.from(new BN(timestamp).toArray('le', 8)),
     ],
     programId,
   );
@@ -52,6 +54,7 @@ export async function createContributorProposalInstruction(
 
   const instruction = program.instruction.proposeContributor(
     new BN(dto.proposedRate),
+    new BN(timestamp),
     {
       accounts: {
         organization,
