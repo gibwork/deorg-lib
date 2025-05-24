@@ -50,8 +50,10 @@ export async function createContributorProposalInstruction(
     programId,
   );
 
+  const timestamp = Math.floor(Date.now() / 1000);
   const instruction = program.instruction.proposeContributor(
     new BN(dto.proposedRate),
+    new BN(timestamp),
     {
       accounts: {
         organization,
